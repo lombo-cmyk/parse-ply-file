@@ -1,5 +1,6 @@
 import pandas as pd
 from argparse import ArgumentParser
+import sys
 
 parser = ArgumentParser()
 parser.add_argument("file", help="path to file to parse",
@@ -10,14 +11,18 @@ args = parser.parse_args()
 
 
 def read_file() -> pd.DataFrame:
-    if args.excel:
-        file = pd.read_excel(io=args.file,
-                             sheet_name="cell1",
-                             names=["x", "y", "z", "label", "signal", "tmp"])
-    else:
-        file = pd.read_csv(args.file,
-                           sep=" ",
-                           names=["x", "y", "z", "label", "signal", "tmp"])
+    try:
+        if args.excel:
+            file = pd.read_excel(io=args.file,
+                                 sheet_name="cell1",
+                                 names=["x", "y", "z", "label", "signal", "tmp"])
+        else:
+            file = pd.read_csv(args.file,
+                               sep=" ",
+                               names=["x", "y", "z", "label", "signal", "tmp"])
+    except FileNotFoundError:
+        print(f"Provided file: >> {args.file} << does not exist! Closing...")
+        sys.exit()
     file = file.drop(labels="tmp", axis=1)
     return file
 
@@ -69,6 +74,7 @@ def main():
 
     is_excel = "_from_excel" if args.excel else ""
     new_file = f"output{is_excel}.csv"
+    print(f"Saving to: {new_file} ...")
     entries.to_csv(new_file, index=False)
 
 
