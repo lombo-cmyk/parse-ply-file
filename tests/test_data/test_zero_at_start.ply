@@ -1,0 +1,22 @@
+ply
+format ascii 1.0
+comment Exported from MorphoGraphX 2.0 1-254
+comment Triangle mesh
+element vertex 5
+property float x
+property float y
+property float z
+property int label
+property float signal
+element face 660232
+property list uchar int vertex_index
+property int label
+end_header
+-40.7182 56.4473 6.94768 0 142.323
+-38.4828 54.3129 6.74237 1 143.379
+28.5399 71.8938 -7.5 -1 246.756
+23.8367 -81.8772 1.98819 1 178.517
+26.7126 -80.9072 1.63426 1 158.448
+5 5 5 5 5
+5 5 5 5 5
+5 5 5 5 5

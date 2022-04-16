@@ -1,6 +1,5 @@
 from argparse import ArgumentParser
-
-from ply_reader import PlyReader
+from parse_ply_file._ply_reader import PlyReader
 
 
 def main():

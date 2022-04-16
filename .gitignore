@@ -5,6 +5,9 @@
 *.xlsx
 *.csv
 
+# include test examples
+!/tests/test_data/*.ply
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
