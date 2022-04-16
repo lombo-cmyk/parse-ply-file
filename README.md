@@ -1,7 +1,9 @@
 # parse-ply-file
-Requirements: python  >=3.8
+Requirements: python  >=3.8, pandas, openpyxl
 
 How to run:
-* `pip install -r requirements.txt`
-* to display help message: `python main.py`
-* Example call: `python main.py my_file.ply`
+* change directory to repo folder (the one with setup.py)
+* `pip install -e .`
+* Go wherever you want (probably directory with your .ply files)
+* to display help message: `python  -m parse_ply_file -h`
+* Example call: `python -m parse_ply_file my_file.ply`
