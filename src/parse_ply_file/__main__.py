@@ -4,7 +4,7 @@ from parse_ply_file._ply_reader import PlyReader
 
 
 def main():
-    dsc = f"Executable python module created to parse cell .ply and .xlsx " \
+    dsc = f"Executable python module created to parse cell ASCII .ply " \
           f"files. {os.linesep}Takes file as an argument and saved th" \
           f"e output to execution location." \
           f"{os.linesep}Example call:" \
@@ -16,12 +16,9 @@ def main():
         formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument("file", help="path to file to parse",
                         type=str)
-    parser.add_argument("--excel", help="use this argument if parsed file is "
-                                        "Excel file (.xlsx)",
-                        action='store_true')
     args = parser.parse_args()
 
-    reader = PlyReader(args.file, args.excel)
+    reader = PlyReader(args.file)
     reader.run()
 
 

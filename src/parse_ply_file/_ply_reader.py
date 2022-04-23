@@ -1,24 +1,15 @@
 import sys
 import pandas as pd
 from datetime import datetime
-from enum import Enum
 from typing import Optional
 
-
-class Colnames(Enum):
-    X = "x"
-    Y = "y"
-    Z = "z"
-    LABEL = "label"
-    SIGNAL = "signal"
-    TMP = "tmp"
+from ._columns import Colnames, ColumnSanitizer
 
 
 class PlyReader:
 
-    def __init__(self, filename: str, is_excel: bool):
+    def __init__(self, filename: str):
         self.filename = filename
-        self.is_excel = is_excel
         self.colnames = [el.value for el in Colnames]
 
         self.file: Optional[pd.DataFrame] = None
@@ -34,20 +25,20 @@ class PlyReader:
         self._save_output()
 
     def _read_file_content(self):
+        column_sanitizer = ColumnSanitizer(self.filename, self.colnames)
+        column_sanitizer.determine_column_count()
+        self.colnames = column_sanitizer.extend_columns()
         try:
-            if self.is_excel:
-                self.file = pd.read_excel(self.filename,
-                                          sheet_name="cell1",
-                                          names=self.colnames)
-            else:
-                self.file = pd.read_csv(self.filename,
-                                        sep=" ",
-                                        names=self.colnames,
-                                        dtype=str)
+            self.file = pd.read_csv(self.filename,
+                                    sep=" ",
+                                    names=self.colnames,
+                                    dtype=str)
         except FileNotFoundError:
             sys.exit(f"Provided file: >> {self.filename} << does not exist! "
                      f"Closing...")
-        self.file = self.file.drop(labels=Colnames.TMP.value, axis=1)
+
+        self.file, self.colnames = ColumnSanitizer.drop_extra_columns(
+            self.file)
 
     def _find_header_size(self):
         column = self.file[Colnames.X.value]
@@ -88,7 +79,6 @@ class PlyReader:
 
     def _save_output(self):
         exec_time = datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-        excel_suffix = "_from_excel" if self.is_excel else ""
-        new_file = f"{exec_time}_output{excel_suffix}.csv"
+        new_file = f"{exec_time}_output.csv"
         print(f"Saving to: {new_file} ...")
         self.file.to_csv(new_file, index=False)
